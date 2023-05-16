@@ -1,4 +1,4 @@
-package com.example.gatling.websocket;
+package com.example.gatling.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -17,7 +17,7 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
      */
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        //registry.enableSimpleBroker("/sub");              // 클라이언트 구독 주소 Prefix
+        registry.enableSimpleBroker("/topic");              // 클라이언트 구독 주소 Prefix
         registry.setApplicationDestinationPrefixes("/xml"); // 서버 발행 주소 Prefix
     }
 
