@@ -21,6 +21,7 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-web-services'
+    implementation 'org.springframework.boot:spring-boot-starter-websocket'
     implementation 'io.gatling.highcharts:gatling-charts-highcharts:3.9.5'
 
     compileOnly 'org.projectlombok:lombok'
