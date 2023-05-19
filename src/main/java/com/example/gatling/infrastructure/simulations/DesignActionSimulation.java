@@ -1,4 +1,4 @@
-package com.example.gatling.configuration.simulations;
+package com.example.gatling.infrastructure.simulations;
 
 import com.example.gatling.stomp.domain.SendFrame;
 import com.example.gatling.stomp.domain.StompFrame;
@@ -13,6 +13,7 @@ import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.ws;
 
 public class DesignActionSimulation extends Simulation {
+
     HttpProtocolBuilder httpProtocol = http
             .baseUrl("http://localhost:8080")
             .acceptHeader("application/xhtml+xml;q=0.8,application/xml,*/*;q=0.6")
@@ -27,6 +28,8 @@ public class DesignActionSimulation extends Simulation {
             .body("")
             .contentType(MediaType.APPLICATION_XML)
             .build();
+
+    // randomSwitch, repeat
 
     ChainBuilder insert =
             exec(ws("Connect WS").connect("/connect"))

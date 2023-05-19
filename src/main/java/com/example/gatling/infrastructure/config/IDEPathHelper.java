@@ -1,4 +1,4 @@
-package com.example.gatling.configuration;
+package com.example.gatling.infrastructure.config;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;

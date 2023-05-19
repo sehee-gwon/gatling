@@ -1,4 +1,4 @@
-package com.example.gatling.configuration.simulations;
+package com.example.gatling.infrastructure.simulations;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.*;

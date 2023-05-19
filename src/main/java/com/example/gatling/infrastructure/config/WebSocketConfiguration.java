@@ -1,4 +1,4 @@
-package com.example.gatling.configuration;
+package com.example.gatling.infrastructure.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
