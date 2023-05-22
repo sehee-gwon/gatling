@@ -8,14 +8,13 @@ import org.springframework.util.StringUtils;
 
 @NoArgsConstructor
 public class SendFrame extends StompFrame {
-    private String destination;
+    private String destination = "/app/designId";
     private MediaType contentType;
     private Integer contentLength;
 
     @Builder
-    public SendFrame(String destination, MediaType contentType, Integer contentLength, String body) {
+    public SendFrame(MediaType contentType, Integer contentLength, String body) {
         this.commend = StompCommand.SEND;
-        this.destination = destination;
         this.contentType = contentType;
         this.contentLength = contentLength;
         this.body = body;

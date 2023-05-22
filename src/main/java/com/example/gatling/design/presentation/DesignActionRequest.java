@@ -2,6 +2,7 @@ package com.example.gatling.design.presentation;
 
 import com.example.gatling.design.domain.ActionType;
 import com.example.gatling.design.domain.Sheet;
+import com.example.gatling.infrastructure.util.SheetXmlUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -16,8 +17,8 @@ public class DesignActionRequest {
     private ActionType actionType;
     private List<Sheet> sheets;
 
-    public DesignActionRequest(String designIdx, ActionType actionType, List<Sheet> sheets) {
-        this.designIdx = designIdx;
+    public DesignActionRequest(int designIdx, ActionType actionType, List<Sheet> sheets) {
+        this.designIdx = String.format(SheetXmlUtil.DESIGN_ID_FORMAT, designIdx);
         this.actionType = actionType;
         this.sheets = sheets;
     }

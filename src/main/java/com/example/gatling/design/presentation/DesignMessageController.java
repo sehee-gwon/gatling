@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 
 @Slf4j
 @Controller
@@ -14,10 +15,16 @@ public class DesignMessageController {
     @MessageMapping("/designId")
     public void action(DesignActionRequest request) {
         log.info("designIdx: {}, actionType: {}", request.getDesignIdx(), request.getActionType());
+
+        log.info("  Sheets:");
         for (Sheet sheet : request.getSheets()) {
             log.info("  ㄴ sheetKey: {}", sheet.getSheetKey());
-            for (Element element : sheet.getElements()) {
-                log.info("    ㄴ id: {}, data: {}", element.getId(), element.getData());
+
+            if (!CollectionUtils.isEmpty(sheet.getElements())) {
+                log.info("    Elements");
+                for (Element element : sheet.getElements()) {
+                    log.info("    ㄴ id: {}, data: {}", element.getId(), element.getData());
+                }
             }
         }
     }

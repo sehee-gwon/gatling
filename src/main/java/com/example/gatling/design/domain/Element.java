@@ -1,9 +1,6 @@
 package com.example.gatling.design.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @ToString
@@ -12,6 +9,10 @@ import lombok.ToString;
 public class Element {
     private String id;
     private String data;
+
+    public Element(String id) {
+        this.id = id;
+    }
 
     public Element(String id, String data) {
         this.id = id;

@@ -6,20 +6,22 @@ import com.example.gatling.design.presentation.DesignActionRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
 import com.example.gatling.infrastructure.util.PayloadUtil;
-import com.example.gatling.infrastructure.util.RandomSheetUtil;
+import com.example.gatling.infrastructure.util.SheetXmlUtil;
 import io.gatling.javaapi.core.ChainBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 import org.springframework.http.MediaType;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.ws;
 
-public class DesignInsertSimulation extends Simulation {
+public class SheetInsertSimulation extends Simulation {
 
     HttpProtocolBuilder httpProtocol = http
             .baseUrl("http://localhost:8080")
@@ -30,26 +32,25 @@ public class DesignInsertSimulation extends Simulation {
             .userAgentHeader("Mozilla/5.0 (Macintosh; Intel Mac OS X 10.8; rv:16.0) Gecko/20100101 Firefox/16.0")
             .wsBaseUrl("ws://localhost:8080");
 
-    final int designCnt = 5;
+    List<Integer> designIds = Arrays.asList(1, 2, 3);
+    List<Integer> sheetKeys = Arrays.asList(1, 2, 3, 4, 5);
+
+    int elementSize = 1;
 
     ChainBuilder insert =
             exec(ws("Connect WS").connect("/connect"))
             .pause(1)
-            .repeat(designCnt, "i").on(
+            .foreach(designIds, "designId").on(
                 exec(ws("INSERT SEND").sendText(session -> {
-                        int i = session.getInt("i");
-                        String designIdx = String.format("DESIGN_%03d", i+1);
-                        List<Sheet> sheets = RandomSheetUtil.createSheets(ActionType.INSERT, i+1, 1);
+                    List<Sheet> sheets = SheetXmlUtil.getInsertSheet(sheetKeys, elementSize);
 
-                        StompFrame insert = SendFrame.builder()
-                                .destination("/app/designId")
-                                .body(PayloadUtil.payload(new DesignActionRequest(designIdx, ActionType.INSERT, sheets)))
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .build();
+                    StompFrame insert = SendFrame.builder()
+                            .body(PayloadUtil.payload(new DesignActionRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .build();
 
-                        return insert.make();
-                    })
-                ).pause(1)
+                    return insert.make();
+                })).pause(1)
             )
             .pause(1)
             .exec(ws("Close WS").close());
