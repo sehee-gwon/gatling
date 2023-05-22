@@ -1,4 +1,4 @@
-package com.example.gatling.stomp.domain;
+package com.example.gatling.infrastructure.stomp;
 
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,6 @@ public class SendFrame extends StompFrame {
     private String destination;
     private MediaType contentType;
     private Integer contentLength;
-    private String body;
 
     @Builder
     public SendFrame(String destination, MediaType contentType, Integer contentLength, String body) {

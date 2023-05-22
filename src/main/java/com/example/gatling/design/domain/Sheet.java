@@ -3,21 +3,18 @@ package com.example.gatling.design.domain;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
-@ToString
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"key"})
+@EqualsAndHashCode(of = {"sheetKey"})
 public class Sheet {
-    private UUID key;
-    private List<Element> elementList;
+    private String sheetKey;
+    private List<Element> elements;
 
-    public Sheet(UUID key, List<Element> elementList) {
-        this.key = key;
-        this.elementList = elementList;
+    public Sheet(String sheetKey, List<Element> elements) {
+        this.sheetKey = sheetKey;
+        this.elements = elements;
     }
 }

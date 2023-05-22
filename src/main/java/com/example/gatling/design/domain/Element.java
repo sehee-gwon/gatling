@@ -8,13 +8,13 @@ import lombok.ToString;
 @Getter
 @ToString
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"elementId"})
+@EqualsAndHashCode(of = {"id"})
 public class Element {
-    private Long elementId;
-    private String elementData;
+    private String id;
+    private String data;
 
-    public Element(Long elementId, String elementData) {
-        this.elementId = elementId;
-        this.elementData = elementData;
+    public Element(String id, String data) {
+        this.id = id;
+        this.data = data;
     }
 }

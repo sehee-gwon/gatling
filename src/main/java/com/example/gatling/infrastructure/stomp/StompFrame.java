@@ -1,4 +1,4 @@
-package com.example.gatling.stomp.domain;
+package com.example.gatling.infrastructure.stomp;
 
 import org.springframework.messaging.simp.stomp.StompCommand;
 import org.springframework.util.StringUtils;
@@ -11,7 +11,7 @@ public abstract class StompFrame {
         this.validator();
 
         StringBuilder sb = new StringBuilder();
-        sb.append(commend);
+        sb.append(this.commend);
         this.setHeader(sb);
 
         sb.append("\n\n");

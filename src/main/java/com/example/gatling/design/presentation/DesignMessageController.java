@@ -1,5 +1,7 @@
 package com.example.gatling.design.presentation;
 
+import com.example.gatling.design.domain.Element;
+import com.example.gatling.design.domain.Sheet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -9,11 +11,14 @@ import org.springframework.stereotype.Controller;
 @Controller
 @RequiredArgsConstructor
 public class DesignMessageController {
-    @MessageMapping("/app/designId")
+    @MessageMapping("/designId")
     public void action(DesignActionRequest request) {
-        log.info("Hi, I am DesignMessageController!!");
-        log.info("Xml {}...", request.getAction());
-
-        log.debug("request: {}", request);
+        log.info("designIdx: {}, actionType: {}", request.getDesignIdx(), request.getActionType());
+        for (Sheet sheet : request.getSheets()) {
+            log.info("  ㄴ sheetKey: {}", sheet.getSheetKey());
+            for (Element element : sheet.getElements()) {
+                log.info("    ㄴ id: {}, data: {}", element.getId(), element.getData());
+            }
+        }
     }
 }
