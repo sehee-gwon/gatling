@@ -1,16 +1,16 @@
-package com.example.gatling.infrastructure.util;
+package com.example.gatling.infrastructure.utils;
 
 import com.example.gatling.design.domain.Element;
 import com.example.gatling.design.domain.Sheet;
-import com.example.gatling.infrastructure.util.tags.SheetTag;
-import com.example.gatling.infrastructure.util.tags.SingleTag;
-import com.example.gatling.infrastructure.util.tags.SvgTag;
-import com.example.gatling.infrastructure.util.tags.TextTag;
+import com.example.gatling.infrastructure.exception.SimulationException;
+import com.example.gatling.infrastructure.utils.tags.SheetTag;
+import com.example.gatling.infrastructure.utils.tags.SingleTag;
+import com.example.gatling.infrastructure.utils.tags.SvgTag;
+import com.example.gatling.infrastructure.utils.tags.TextTag;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SheetXmlUtil {
+public class SheetXmlUtils {
     public static final String TAG_NAME = "SVG";
 
     public static final String DESIGN_ID_FORMAT = "DESIGN_%03d";
@@ -66,7 +66,7 @@ public class SheetXmlUtil {
                 sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey), elements));
             }
         } catch (ParserConfigurationException | TransformerException e) {
-            throw new IllegalStateException("Error processing XML", e);
+            throw new SimulationException("XML processing error", e);
         }
 
         return sheets;
@@ -118,7 +118,7 @@ public class SheetXmlUtil {
 
             sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey), elements));
         } catch (ParserConfigurationException | TransformerException e) {
-            throw new IllegalStateException("Error processing XML", e);
+            throw new SimulationException("XML processing error", e);
         }
 
         return sheets;

@@ -5,8 +5,8 @@ import com.example.gatling.design.domain.Sheet;
 import com.example.gatling.design.presentation.DesignActionRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
-import com.example.gatling.infrastructure.util.PayloadUtil;
-import com.example.gatling.infrastructure.util.SheetXmlUtil;
+import com.example.gatling.infrastructure.utils.ParserUtils;
+import com.example.gatling.infrastructure.utils.SheetXmlUtils;
 import io.gatling.javaapi.core.*;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 import org.springframework.http.MediaType;
@@ -37,10 +37,10 @@ public class SheetDeleteSimulation extends Simulation {
             .pause(1)
             .foreach(designIds, "designId").on(
                 exec(ws("DELETE SEND").sendText(session -> {
-                    List<Sheet> sheets = SheetXmlUtil.getDeleteSheets(sheetKeys);
+                    List<Sheet> sheets = SheetXmlUtils.getDeleteSheets(sheetKeys);
 
                     StompFrame delete = SendFrame.builder()
-                            .body(PayloadUtil.payload(new DesignActionRequest(session.getInt("designId"), ActionType.DELETE, sheets)))
+                            .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.DELETE, sheets)))
                             .contentType(MediaType.APPLICATION_JSON)
                             .build();
 

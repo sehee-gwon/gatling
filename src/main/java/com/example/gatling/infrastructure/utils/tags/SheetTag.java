@@ -1,6 +1,6 @@
-package com.example.gatling.infrastructure.util.tags;
+package com.example.gatling.infrastructure.utils.tags;
 
-import com.example.gatling.infrastructure.util.RandomUtil;
+import com.example.gatling.infrastructure.utils.RandomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -30,8 +30,8 @@ public class SheetTag {
         this.element.setAttribute("PageDuration", "5");
         this.element.setAttribute("PagePersistentKey", sheetKey);
 
-        this.width = RandomUtil.rand(SIZE_MIN, SIZE_MAX);
-        this.height = RandomUtil.rand(SIZE_MIN, SIZE_MAX);
+        this.width = RandomUtils.randNumber(SIZE_MIN, SIZE_MAX);
+        this.height = RandomUtils.randNumber(SIZE_MIN, SIZE_MAX);
 
         addSheetSize(doc);
         addTemplate(doc);
@@ -56,7 +56,7 @@ public class SheetTag {
 
     private void addBackground(Document doc) {
         Element background = doc.createElement("TEMPLATE");
-        background.setAttribute("Color", RandomUtil.randColorCode());
+        background.setAttribute("Color", RandomUtils.randColorCode());
         background.setAttribute("LayerName", "");
 
         Element pureSkinSize = doc.createElement("PureSkinSize");
@@ -77,7 +77,7 @@ public class SheetTag {
     private void addGuideLines(Document doc) {
         Element guideLines = doc.createElement("GUIDELINES");
 
-        int hPosition = RandomUtil.rand(0, this.width+1);
+        int hPosition = RandomUtils.randNumber(0, this.width+1);
         Element horizontal = doc.createElement("HORIZONTAL");
         horizontal.setAttribute("CurrentPosition", String.valueOf(hPosition));
         horizontal.setAttribute("Positive", "true");
@@ -88,7 +88,7 @@ public class SheetTag {
 
         horizontal.appendChild(hGuideLine);
 
-        int vPosition = RandomUtil.rand(0, this.height+1);
+        int vPosition = RandomUtils.randNumber(0, this.height+1);
         Element vertical = doc.createElement("VERTICAL");
         vertical.setAttribute("CurrentPosition", String.valueOf(vPosition));
         vertical.setAttribute("Positive", "true");

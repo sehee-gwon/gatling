@@ -5,15 +5,14 @@ import com.example.gatling.design.domain.Sheet;
 import com.example.gatling.design.presentation.DesignActionRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
-import com.example.gatling.infrastructure.util.PayloadUtil;
-import com.example.gatling.infrastructure.util.SheetXmlUtil;
+import com.example.gatling.infrastructure.utils.ParserUtils;
+import com.example.gatling.infrastructure.utils.SheetXmlUtils;
 import io.gatling.javaapi.core.ChainBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 import org.springframework.http.MediaType;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -42,10 +41,10 @@ public class SheetInsertSimulation extends Simulation {
             .pause(1)
             .foreach(designIds, "designId").on(
                 exec(ws("INSERT SEND").sendText(session -> {
-                    List<Sheet> sheets = SheetXmlUtil.getInsertSheet(sheetKeys, elementSize);
+                    List<Sheet> sheets = SheetXmlUtils.getInsertSheet(sheetKeys, elementSize);
 
                     StompFrame insert = SendFrame.builder()
-                            .body(PayloadUtil.payload(new DesignActionRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
+                            .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
                             .contentType(MediaType.APPLICATION_JSON)
                             .build();
 

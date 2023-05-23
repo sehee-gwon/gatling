@@ -1,15 +1,5 @@
 package com.example.gatling;
 
-import com.example.gatling.design.domain.ActionType;
-import com.example.gatling.design.domain.Element;
-import com.example.gatling.design.domain.Sheet;
-import com.example.gatling.infrastructure.util.SheetXmlUtil;
-import org.junit.jupiter.api.Test;
-
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
-
 class RandomSheetUtilTest {
 
     final int sheetSize = 5;

@@ -1,6 +1,6 @@
-package com.example.gatling.infrastructure.util.tags;
+package com.example.gatling.infrastructure.utils.tags;
 
-import com.example.gatling.infrastructure.util.RandomUtil;
+import com.example.gatling.infrastructure.utils.RandomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -30,20 +30,20 @@ public class TextTag extends SingleTag {
 
     public void addText(Document doc) {
         this.text = doc.createElement("Text");
-        this.text.setTextContent(RandomUtil.randAlphabet());
+        this.text.setTextContent(RandomUtils.randAlphabet());
         this.element.appendChild(this.text);
     }
 
     public void addFont(Document doc) {
         this.font = doc.createElement("Font");
-        this.font.setAttribute("Color", RandomUtil.randColorCode());
+        this.font.setAttribute("Color", RandomUtils.randColorCode());
         this.font.setAttribute("Family", "Noto Sans CJK KR Regular");
 
         Element style = doc.createElement("Style");
-        style.setAttribute("Bold", String.valueOf(RandomUtil.rand()));
-        style.setAttribute("Italic", String.valueOf(RandomUtil.rand()));
-        style.setAttribute("Strikeout", String.valueOf(RandomUtil.rand()));
-        style.setAttribute("Underline", String.valueOf(RandomUtil.rand()));
+        style.setAttribute("Bold", String.valueOf(RandomUtils.randBoolean()));
+        style.setAttribute("Italic", String.valueOf(RandomUtils.randBoolean()));
+        style.setAttribute("Strikeout", String.valueOf(RandomUtils.randBoolean()));
+        style.setAttribute("Underline", String.valueOf(RandomUtils.randBoolean()));
 
         this.font.appendChild(style);
         this.element.appendChild(this.font);
@@ -51,25 +51,25 @@ public class TextTag extends SingleTag {
 
     public void addCurve(Document doc) {
         this.curve = doc.createElement("Curve");
-        this.curve.setAttribute("IsCurved", String.valueOf(RandomUtil.rand()));
+        this.curve.setAttribute("IsCurved", String.valueOf(RandomUtils.randBoolean()));
         this.element.appendChild(this.curve);
     }
 
     public void addEffect(Document doc) {
         this.effect = doc.createElement("Effect");
         this.effect.setAttribute("TextSpace", "0");
-        this.effect.setAttribute("ScaleX", String.valueOf(RandomUtil.rand(0, 2)));
+        this.effect.setAttribute("ScaleX", String.valueOf(RandomUtils.randNumber(0, 2)));
 
         Element outline = doc.createElement("Outline");
-        outline.setAttribute("DoOutline", String.valueOf(RandomUtil.rand()));
+        outline.setAttribute("DoOutline", String.valueOf(RandomUtils.randBoolean()));
         outline.setAttribute("Color", "0000000");
-        outline.setAttribute("Size", String.valueOf(RandomUtil.rand(1,6)));
+        outline.setAttribute("Size", String.valueOf(RandomUtils.randNumber(1,6)));
 
         Element shadow = doc.createElement("Shadow");
-        shadow.setAttribute("DoShadow", String.valueOf(RandomUtil.rand()));
+        shadow.setAttribute("DoShadow", String.valueOf(RandomUtils.randBoolean()));
         shadow.setAttribute("Color", "28000000");
-        shadow.setAttribute("Distance", String.valueOf(RandomUtil.rand(1, 11)));
-        shadow.setAttribute("Angle", String.valueOf(RandomUtil.rand(300, 316)));
+        shadow.setAttribute("Distance", String.valueOf(RandomUtils.randNumber(1, 11)));
+        shadow.setAttribute("Angle", String.valueOf(RandomUtils.randNumber(300, 316)));
         shadow.setAttribute("Spread", "0");
 
         Element fill = doc.createElement("Fill");

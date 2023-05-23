@@ -1,4 +1,4 @@
-package com.example.gatling.infrastructure.util;
+package com.example.gatling.infrastructure.utils;
 
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -7,16 +7,16 @@ import java.awt.*;
 import java.util.concurrent.ThreadLocalRandom;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class RandomUtil {
-    public static int rand(int min, int max) {
+public class RandomUtils {
+    public static int randNumber(int min, int max) {
         return ThreadLocalRandom.current().nextInt(min, max);
     }
 
-    public static double rand(double min, double max) {
+    public static double randNumber(double min, double max) {
         return ThreadLocalRandom.current().nextDouble(min, max);
     }
 
-    public static boolean rand() {
+    public static boolean randBoolean() {
         int value = ThreadLocalRandom.current().nextInt(0, 2);
         return value == 0;
     }

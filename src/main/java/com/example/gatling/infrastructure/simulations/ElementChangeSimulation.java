@@ -5,8 +5,8 @@ import com.example.gatling.design.domain.Sheet;
 import com.example.gatling.design.presentation.DesignActionRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
-import com.example.gatling.infrastructure.util.PayloadUtil;
-import com.example.gatling.infrastructure.util.SheetXmlUtil;
+import com.example.gatling.infrastructure.utils.ParserUtils;
+import com.example.gatling.infrastructure.utils.SheetXmlUtils;
 import io.gatling.javaapi.core.ChainBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
@@ -53,10 +53,10 @@ public class ElementChangeSimulation extends Simulation {
             .foreach(insertDesignIds, "designId").on(
                 foreach(insertSheetKeys, "sheetKey").on(
                     exec(ws("INSERT SEND").sendText(session -> {
-                        List<Sheet> sheets = SheetXmlUtil.getSaveElement(session.getInt("sheetKey"), insertElementIds);
+                        List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt("sheetKey"), insertElementIds);
 
                         StompFrame insert = SendFrame.builder()
-                                .body(PayloadUtil.payload(new DesignActionRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
+                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 
@@ -73,10 +73,10 @@ public class ElementChangeSimulation extends Simulation {
             .foreach(updateDesignIds, "designId").on(
                 foreach(updateSheetKeys, "sheetKey").on(
                     exec(ws("UPDATE SEND").sendText(session -> {
-                        List<Sheet> sheets = SheetXmlUtil.getSaveElement(session.getInt("sheetKey"), updateElementIds);
+                        List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt("sheetKey"), updateElementIds);
 
                         StompFrame update = SendFrame.builder()
-                                .body(PayloadUtil.payload(new DesignActionRequest(session.getInt("designId"), ActionType.UPDATE, sheets)))
+                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.UPDATE, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 
@@ -92,10 +92,10 @@ public class ElementChangeSimulation extends Simulation {
             .foreach(deleteDesignIds, "designId").on(
                 foreach(deleteSheetKeys, "sheetKey").on(
                     exec(ws("UPDATE SEND").sendText(session -> {
-                        List<Sheet> sheets = SheetXmlUtil.getDeleteElement(session.getInt("sheetKey"), deleteElementIds);
+                        List<Sheet> sheets = SheetXmlUtils.getDeleteElement(session.getInt("sheetKey"), deleteElementIds);
 
                         StompFrame delete = SendFrame.builder()
-                                .body(PayloadUtil.payload(new DesignActionRequest(session.getInt("designId"), ActionType.DELETE, sheets)))
+                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.DELETE, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 

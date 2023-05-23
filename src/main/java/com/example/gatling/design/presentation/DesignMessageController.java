@@ -14,6 +14,7 @@ import org.springframework.util.CollectionUtils;
 public class DesignMessageController {
     @MessageMapping("/designId")
     public void action(DesignActionRequest request) {
+        log.info("---------------------------------------------------------------------------");
         log.info("designIdx: {}, actionType: {}", request.getDesignIdx(), request.getActionType());
 
         log.info("  Sheets:");
