@@ -1,11 +1,16 @@
 package com.example.gatling.infrastructure.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.web.socket.server.standard.ServletServerContainerFactoryBean;
 
+@Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
@@ -21,10 +26,39 @@ public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer 
         registry.setApplicationDestinationPrefixes("/app");         // 서버 발행 주소 Prefix
     }
 
+    /**
+     * Websocket connection endpoint 설정
+     * @param registry
+     */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry
                 .addEndpoint("/connect")
                 .setAllowedOrigins("*");
+    }
+
+    /**
+     * Spring Websocket 설정
+     * @param registry
+     */
+    @Override
+    public void configureWebSocketTransport(WebSocketTransportRegistration registry) {
+        //registry.setMessageSizeLimit(2 * 1024 * 1024)
+        //        .setSendBufferSizeLimit(2 * 1024 * 1024)
+        //        .setSendTimeLimit(20000);
+    }
+
+    /**
+     * Tomcat Servlet Websocket 설정
+     * @return
+     */
+    @Bean
+    public ServletServerContainerFactoryBean servletServerContainerFactoryBean() {
+        ServletServerContainerFactoryBean container = new ServletServerContainerFactoryBean();
+
+        container.setMaxTextMessageBufferSize(2 * 1024 * 1024);
+        //container.setMaxBinaryMessageBufferSize(2 * 1024 * 1024);
+        //ContainerProvider.getWebSocketContainer().setDefaultMaxTextMessageBufferSize(2 * 1024 * 1024);
+        return container;
     }
 }

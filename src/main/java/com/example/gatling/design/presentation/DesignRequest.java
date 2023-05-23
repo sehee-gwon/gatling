@@ -12,12 +12,12 @@ import java.util.List;
 @Getter
 @ToString
 @NoArgsConstructor
-public class DesignActionRequest {
+public class DesignRequest {
     private String designIdx;
     private ActionType actionType;
     private List<Sheet> sheets;
 
-    public DesignActionRequest(int designIdx, ActionType actionType, List<Sheet> sheets) {
+    public DesignRequest(int designIdx, ActionType actionType, List<Sheet> sheets) {
         this.designIdx = String.format(SheetXmlUtils.DESIGN_ID_FORMAT, designIdx);
         this.actionType = actionType;
         this.sheets = sheets;

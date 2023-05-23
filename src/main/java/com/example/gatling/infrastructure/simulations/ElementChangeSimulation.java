@@ -2,7 +2,7 @@ package com.example.gatling.infrastructure.simulations;
 
 import com.example.gatling.design.domain.ActionType;
 import com.example.gatling.design.domain.Sheet;
-import com.example.gatling.design.presentation.DesignActionRequest;
+import com.example.gatling.design.presentation.DesignRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
 import com.example.gatling.infrastructure.utils.ParserUtils;
@@ -44,7 +44,7 @@ public class ElementChangeSimulation extends Simulation {
 
     List<Integer> insertDesignIds = Arrays.asList(1, 2);
     List<Integer> insertSheetKeys = Arrays.asList(1, 2, 3);
-    List<Integer> insertElementIds = Arrays.asList(2, 3, 4);
+    List<Integer> insertElementIds = Arrays.asList(2, 3, 4, 5, 6, 7, 8, 9, 10);
 
     List<Integer> updateDesignIds = Arrays.asList(1, 2);
     List<Integer> updateSheetKeys = Arrays.asList(1, 2);
@@ -63,7 +63,7 @@ public class ElementChangeSimulation extends Simulation {
                         List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt(SHEET_KEY_NAME), insertElementIds);
 
                         StompFrame request = SendFrame.builder()
-                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt(DESIGN_ID_NAME), ActionType.INSERT, sheets)))
+                                .body(ParserUtils.toJsonString(new DesignRequest(session.getInt(DESIGN_ID_NAME), ActionType.INSERT, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 
@@ -83,7 +83,7 @@ public class ElementChangeSimulation extends Simulation {
                         List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt(SHEET_KEY_NAME), updateElementIds);
 
                         StompFrame request = SendFrame.builder()
-                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt(DESIGN_ID_NAME), ActionType.UPDATE, sheets)))
+                                .body(ParserUtils.toJsonString(new DesignRequest(session.getInt(DESIGN_ID_NAME), ActionType.UPDATE, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 
@@ -102,7 +102,7 @@ public class ElementChangeSimulation extends Simulation {
                         List<Sheet> sheets = SheetXmlUtils.getDeleteElement(session.getInt(SHEET_KEY_NAME), deleteElementIds);
 
                         StompFrame request = SendFrame.builder()
-                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt(DESIGN_ID_NAME), ActionType.DELETE, sheets)))
+                                .body(ParserUtils.toJsonString(new DesignRequest(session.getInt(DESIGN_ID_NAME), ActionType.DELETE, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 

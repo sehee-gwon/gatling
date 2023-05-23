@@ -2,7 +2,7 @@ package com.example.gatling.infrastructure.simulations;
 
 import com.example.gatling.design.domain.ActionType;
 import com.example.gatling.design.domain.Sheet;
-import com.example.gatling.design.presentation.DesignActionRequest;
+import com.example.gatling.design.presentation.DesignRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
 import com.example.gatling.infrastructure.utils.ParserUtils;
@@ -40,7 +40,7 @@ public class SheetDeleteSimulation extends Simulation {
                     List<Sheet> sheets = SheetXmlUtils.getDeleteSheets(sheetKeys);
 
                     StompFrame request = SendFrame.builder()
-                            .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.DELETE, sheets)))
+                            .body(ParserUtils.toJsonString(new DesignRequest(session.getInt("designId"), ActionType.DELETE, sheets)))
                             .contentType(MediaType.APPLICATION_JSON)
                             .build();
 
