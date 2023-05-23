@@ -13,6 +13,7 @@ import io.gatling.javaapi.core.Simulation;
 import io.gatling.javaapi.http.HttpProtocolBuilder;
 import org.springframework.http.MediaType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,7 +33,13 @@ public class SheetInsertSimulation extends Simulation {
             .wsBaseUrl("ws://localhost:8080");
 
     List<Integer> designIds = Arrays.asList(1, 2, 3);
-    List<Integer> sheetKeys = Arrays.asList(1, 2, 3, 4, 5);
+    List<Integer> sheetKeys = new ArrayList<>();
+
+    {
+        for (int i=1; i<=10; i++) {
+            sheetKeys.add(i);
+        }
+    }
 
     int elementSize = 1;
 

@@ -4,6 +4,7 @@ import com.example.gatling.design.domain.Element;
 import com.example.gatling.design.domain.Sheet;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
@@ -24,7 +25,7 @@ public class DesignMessageController {
             if (!CollectionUtils.isEmpty(sheet.getElements())) {
                 log.info("    Elements");
                 for (Element element : sheet.getElements()) {
-                    log.info("    ㄴ id: {}, data: {}", element.getId(), element.getData());
+                    log.info("    ㄴ id: {}, data: {}", element.getId(), new String(Base64.decodeBase64(element.getData())));
                 }
             }
         }

@@ -9,6 +9,7 @@ import com.example.gatling.infrastructure.utils.tags.SvgTag;
 import com.example.gatling.infrastructure.utils.tags.TextTag;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.w3c.dom.Document;
 
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -59,10 +60,7 @@ public class SheetXmlUtils {
 
                 doc.appendChild(sheet);
 
-                StringWriter writer = new StringWriter();
-                tf.newTransformer().transform(new DOMSource(doc), new StreamResult(writer));
-
-                elements.add(new Element(String.format(ELEMENT_ID_FORMAT, 1), writer.toString()));
+                elements.add(new Element(String.format(ELEMENT_ID_FORMAT, 1), toXmlString(doc, tf, true)));
                 sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey), elements));
             }
         } catch (ParserConfigurationException | TransformerException e) {
@@ -104,16 +102,9 @@ public class SheetXmlUtils {
 
             for (Integer elementId : elementIds) {
                 Document doc = dbf.newDocumentBuilder().newDocument();
-
                 doc.appendChild(createTag(doc, TAG_NAME));
 
-                StringWriter writer = new StringWriter();
-
-                Transformer transformer = tf.newTransformer();
-                transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes"); // 최상단 xml 태그 제외
-                transformer.transform(new DOMSource(doc), new StreamResult(writer));
-
-                elements.add(new Element(String.format(ELEMENT_ID_FORMAT, elementId), writer.toString()));
+                elements.add(new Element(String.format(ELEMENT_ID_FORMAT, elementId), toXmlString(doc, tf, false)));
             }
 
             sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey), elements));
@@ -165,5 +156,15 @@ public class SheetXmlUtils {
         }
 
         return tag.getElement();
+    }
+
+    private static String toXmlString(Document doc, TransformerFactory tf, boolean hasDeclaration) throws TransformerException {
+        StringWriter writer = new StringWriter();
+
+        Transformer transformer = tf.newTransformer();
+        if (!hasDeclaration) transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes"); // 최상단 xml 태그 제외
+        transformer.transform(new DOMSource(doc), new StreamResult(writer));
+
+        return Base64.encodeBase64String(writer.toString().getBytes());
     }
 }
