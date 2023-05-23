@@ -43,12 +43,12 @@ public class SheetInsertSimulation extends Simulation {
                 exec(ws("INSERT SEND").sendText(session -> {
                     List<Sheet> sheets = SheetXmlUtils.getInsertSheet(sheetKeys, elementSize);
 
-                    StompFrame insert = SendFrame.builder()
+                    StompFrame request = SendFrame.builder()
                             .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
                             .contentType(MediaType.APPLICATION_JSON)
                             .build();
 
-                    return insert.make();
+                    return request.make();
                 })).pause(1)
             )
             .pause(1)

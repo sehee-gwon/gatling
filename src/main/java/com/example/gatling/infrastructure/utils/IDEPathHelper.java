@@ -1,10 +1,14 @@
-package com.example.gatling.infrastructure.config;
+package com.example.gatling.infrastructure.utils;
+
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.net.URISyntaxException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import static java.util.Objects.requireNonNull;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class IDEPathHelper {
 
     public static final Path gradleSourcesDirectory;

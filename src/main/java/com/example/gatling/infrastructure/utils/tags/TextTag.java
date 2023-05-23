@@ -1,9 +1,11 @@
 package com.example.gatling.infrastructure.utils.tags;
 
 import com.example.gatling.infrastructure.utils.RandomUtils;
+import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+@Getter
 public class TextTag extends SingleTag {
     private Element textData;
     private Element renderPos;

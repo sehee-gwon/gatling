@@ -1,6 +1,6 @@
 package com.example.gatling;
 
-import com.example.gatling.infrastructure.config.IDEPathHelper;
+import com.example.gatling.infrastructure.utils.IDEPathHelper;
 import io.gatling.app.Gatling;
 import io.gatling.core.config.GatlingPropertiesBuilder;
 

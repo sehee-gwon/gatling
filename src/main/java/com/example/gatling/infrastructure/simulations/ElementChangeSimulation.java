@@ -22,6 +22,13 @@ import static io.gatling.javaapi.http.HttpDsl.ws;
 
 public class ElementChangeSimulation extends Simulation {
 
+    static final String CONNECTION_WS_NAME = "Connect WS";
+    static final String CLOSE_WS_NAME = "Close WS";
+    static final String CONNECTION_WS_URL = "/connect";
+
+    static final String DESIGN_ID_NAME = "designId";
+    static final String SHEET_KEY_NAME = "sheetKey";
+
     HttpProtocolBuilder httpProtocol = http
             .baseUrl("http://localhost:8080")
             .acceptHeader("application/xhtml+xml;q=0.8,application/xml,*/*;q=0.6")
@@ -48,63 +55,63 @@ public class ElementChangeSimulation extends Simulation {
     List<Integer> deleteElementIds = Arrays.asList(3, 4);
 
     ChainBuilder insert =
-            exec(ws("Connect WS").connect("/connect"))
+            exec(ws(CONNECTION_WS_NAME).connect(CONNECTION_WS_URL))
             .pause(1)
-            .foreach(insertDesignIds, "designId").on(
-                foreach(insertSheetKeys, "sheetKey").on(
+            .foreach(insertDesignIds, DESIGN_ID_NAME).on(
+                foreach(insertSheetKeys, SHEET_KEY_NAME).on(
                     exec(ws("INSERT SEND").sendText(session -> {
-                        List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt("sheetKey"), insertElementIds);
+                        List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt(SHEET_KEY_NAME), insertElementIds);
 
-                        StompFrame insert = SendFrame.builder()
-                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
+                        StompFrame request = SendFrame.builder()
+                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt(DESIGN_ID_NAME), ActionType.INSERT, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 
-                        return insert.make();
+                        return request.make();
                     })).pause(1)
                 )
             )
             .pause(1)
-            .exec(ws("Close WS").close());
+            .exec(ws(CLOSE_WS_NAME).close());
 
     ChainBuilder update =
-            exec(ws("Connect WS").connect("/connect"))
+            exec(ws(CONNECTION_WS_NAME).connect(CONNECTION_WS_URL))
             .pause(1)
-            .foreach(updateDesignIds, "designId").on(
-                foreach(updateSheetKeys, "sheetKey").on(
+            .foreach(updateDesignIds, DESIGN_ID_NAME).on(
+                foreach(updateSheetKeys, SHEET_KEY_NAME).on(
                     exec(ws("UPDATE SEND").sendText(session -> {
-                        List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt("sheetKey"), updateElementIds);
+                        List<Sheet> sheets = SheetXmlUtils.getSaveElement(session.getInt(SHEET_KEY_NAME), updateElementIds);
 
-                        StompFrame update = SendFrame.builder()
-                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.UPDATE, sheets)))
+                        StompFrame request = SendFrame.builder()
+                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt(DESIGN_ID_NAME), ActionType.UPDATE, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 
-                        return update.make();
+                        return request.make();
                     })).pause(1)
                 )
             )
             .pause(1)
-            .exec(ws("Close WS").close());
+            .exec(ws(CLOSE_WS_NAME).close());
 
     ChainBuilder delete =
-            exec(ws("Connect WS").connect("/connect"))
-            .foreach(deleteDesignIds, "designId").on(
-                foreach(deleteSheetKeys, "sheetKey").on(
-                    exec(ws("UPDATE SEND").sendText(session -> {
-                        List<Sheet> sheets = SheetXmlUtils.getDeleteElement(session.getInt("sheetKey"), deleteElementIds);
+            exec(ws(CONNECTION_WS_NAME).connect(CONNECTION_WS_URL))
+            .foreach(deleteDesignIds, DESIGN_ID_NAME).on(
+                foreach(deleteSheetKeys, SHEET_KEY_NAME).on(
+                    exec(ws("DELETE SEND").sendText(session -> {
+                        List<Sheet> sheets = SheetXmlUtils.getDeleteElement(session.getInt(SHEET_KEY_NAME), deleteElementIds);
 
-                        StompFrame delete = SendFrame.builder()
-                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt("designId"), ActionType.DELETE, sheets)))
+                        StompFrame request = SendFrame.builder()
+                                .body(ParserUtils.toJsonString(new DesignActionRequest(session.getInt(DESIGN_ID_NAME), ActionType.DELETE, sheets)))
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .build();
 
-                        return delete.make();
+                        return request.make();
                     })).pause(1)
                 )
             )
             .pause(1)
-            .exec(ws("Close WS").close());
+            .exec(ws(CLOSE_WS_NAME).close());
 
     ScenarioBuilder users = scenario("Users").exec(insert, update, delete);
 

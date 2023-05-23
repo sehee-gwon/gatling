@@ -1,9 +1,11 @@
 package com.example.gatling.infrastructure.utils.tags;
 
 import com.example.gatling.infrastructure.utils.RandomUtils;
+import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+@Getter
 public class SvgTag extends SingleTag {
     private Element fillColorMap;
     private Element shadow;

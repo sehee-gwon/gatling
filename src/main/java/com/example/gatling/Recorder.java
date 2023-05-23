@@ -1,6 +1,6 @@
 package com.example.gatling;
 
-import com.example.gatling.infrastructure.config.IDEPathHelper;
+import com.example.gatling.infrastructure.utils.IDEPathHelper;
 import io.gatling.recorder.GatlingRecorder;
 import io.gatling.recorder.config.RecorderPropertiesBuilder;
 import scala.Option;
