@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.UUID;
+
 @Getter
 public class TextTag extends SingleTag {
     private Element textData;
@@ -14,8 +16,8 @@ public class TextTag extends SingleTag {
     private Element curve;
     private Element effect;
 
-    public TextTag(Document doc) {
-        super(doc, "TEXT");
+    public TextTag(Document doc, UUID elementId) {
+        super(doc, "TEXT", elementId);
     }
 
     public void addTextData(Document doc) {

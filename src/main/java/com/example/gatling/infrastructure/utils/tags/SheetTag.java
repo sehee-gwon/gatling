@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.UUID;
+
 @Getter
 public class SheetTag {
     private Element element;
@@ -14,12 +16,13 @@ public class SheetTag {
     public static final int SIZE_MIN = 30;
     public static final int SIZE_MAX = 10001;
 
-    public SheetTag(Document doc, String sheetKey, int page) {
+    public SheetTag(Document doc, UUID sheetId, int page) {
         if (doc == null) {
             throw new IllegalStateException("document is required");
         }
 
         this.element = doc.createElement("SHEET");
+        this.element.setAttribute("SheetID", sheetId.toString());
         this.element.setAttribute("appVersion", "1.10.53");
         this.element.setAttribute("Version", "1.5.0.4");
         this.element.setAttribute("RatioId", "");
@@ -30,7 +33,7 @@ public class SheetTag {
         this.element.setAttribute("IsFreeStyle", "true");
         this.element.setAttribute("Page", String.valueOf(page));
         this.element.setAttribute("PageDuration", "5");
-        this.element.setAttribute("PagePersistentKey", sheetKey);
+        this.element.setAttribute("PagePersistentKey", "");
 
         this.width = RandomUtils.randNumber(SIZE_MIN, SIZE_MAX);
         this.height = RandomUtils.randNumber(SIZE_MIN, SIZE_MAX);

@@ -7,7 +7,7 @@ public abstract class StompFrame {
     protected StompCommand commend;
     protected String body;
 
-    public String make() {
+    public String createPayload() {
         this.validator();
 
         StringBuilder sb = new StringBuilder();

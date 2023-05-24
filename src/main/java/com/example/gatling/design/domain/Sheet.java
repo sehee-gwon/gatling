@@ -1,24 +1,42 @@
 package com.example.gatling.design.domain;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @Getter
-@NoArgsConstructor
-@EqualsAndHashCode(of = {"sheetKey"})
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@EqualsAndHashCode(of = {"sheetId"})
 public class Sheet {
-    private String sheetKey;
+    private UUID sheetId;
+    private String sheetData;
     private List<Element> elements;
 
-    public Sheet(String sheetKey) {
-        this.sheetKey = sheetKey;
+    @Builder
+    private Sheet(UUID sheetId, String sheetData, List<Element> elements) {
+        this.sheetId = sheetId;
+        this.sheetData = sheetData;
+        this.elements = elements;
     }
 
-    public Sheet(String sheetKey, List<Element> elements) {
-        this.sheetKey = sheetKey;
-        this.elements = elements;
+    public static Sheet save(UUID sheetId, String sheetData) {
+        return Sheet.builder()
+                .sheetId(sheetId)
+                .sheetData(sheetData)
+                .build();
+    }
+
+    public static Sheet save(UUID sheetId, List<Element> elements) {
+        return Sheet.builder()
+                .sheetId(sheetId)
+                .elements(elements)
+                .build();
+    }
+
+    public static Sheet delete(UUID sheetId) {
+        return Sheet.builder()
+                .sheetId(sheetId)
+                .build();
     }
 }

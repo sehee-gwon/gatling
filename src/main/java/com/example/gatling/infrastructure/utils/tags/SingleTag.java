@@ -4,6 +4,8 @@ import com.example.gatling.infrastructure.utils.RandomUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.UUID;
+
 public class SingleTag {
     protected Element element;
 
@@ -11,12 +13,13 @@ public class SingleTag {
     public static final int OPACITY_MAX = 256;
     public static final double POSITION_MAX = 10000.1;
 
-    public SingleTag(Document doc, String tagName) {
+    public SingleTag(Document doc, String tagName, UUID elementId) {
         if (doc == null) {
             throw new IllegalStateException("document is required");
         }
 
         this.element = doc.createElement(tagName);
+        this.element.setAttribute("ElementID", elementId.toString());
         this.element.setAttribute("Rotate", String.valueOf(RandomUtils.randNumber(0, ROTATE_MAX)));
         this.element.setAttribute("Opacity", String.valueOf(RandomUtils.randNumber(0, OPACITY_MAX)));
         this.element.setAttribute("FlipH", String.valueOf(RandomUtils.randNumber(-1, 1)));

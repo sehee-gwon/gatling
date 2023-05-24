@@ -5,6 +5,8 @@ import lombok.Getter;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import java.util.UUID;
+
 @Getter
 public class SvgTag extends SingleTag {
     private Element fillColorMap;
@@ -13,8 +15,8 @@ public class SvgTag extends SingleTag {
 
     public static final int FILL_COLOR_MAX = 5;
 
-    public SvgTag(Document doc) {
-        super(doc, "SVG");
+    public SvgTag(Document doc, UUID elementId) {
+        super(doc, "SVG", elementId);
     }
 
     public void addFillColorMap(Document doc) {

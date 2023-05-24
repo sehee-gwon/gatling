@@ -1,21 +1,26 @@
 package com.example.gatling.design.domain;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+import java.util.UUID;
 
 @Getter
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode(of = {"id"})
 public class Element {
-    private String id;
-    private String data;
+    private UUID elementId;
+    private String elementData;
 
-    public Element(String id) {
-        this.id = id;
+    public Element(UUID elementId) {
+        this.elementId = elementId;
     }
 
-    public Element(String id, String data) {
-        this.id = id;
-        this.data = data;
+    public Element(UUID elementId, String elementData) {
+        this.elementId = elementId;
+        this.elementData = elementData;
     }
 }

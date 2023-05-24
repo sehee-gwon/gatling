@@ -1,5 +1,6 @@
 package com.example.gatling.infrastructure.utils;
 
+import com.example.gatling.design.domain.ActionType;
 import com.example.gatling.design.domain.Element;
 import com.example.gatling.design.domain.Sheet;
 import com.example.gatling.infrastructure.exception.SimulationException;
@@ -23,129 +24,112 @@ import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class SheetXmlUtils {
     public static final String TAG_NAME = "SVG";
 
-    public static final String DESIGN_ID_FORMAT = "DESIGN_%03d";
-    public static final String SHEET_KEY_FORMAT = "SHEET_%03d";
-    public static final String ELEMENT_ID_FORMAT = "ELEMENT_%03d";
+    public static final String DESIGN_UUID_FORMAT = "aaaaaaaa-0000-0000-0000-%012d";
+    public static final String SHEET_UUID_FORMAT = "bbbbbbbb-1111-1111-1111-%012d";
+    public static final String ELEMENT_UUID_FORMAT = "cccccccc-2222-2222-2222-%012d";
 
     /**
-     * 시트 추가 테스트 데이터 생성<br/>
-     * elements data: SHEET 부터 시작
-     * @param sheetKeys
+     * 시트 추가/수정/삭제 테스트 데이터 생성<br/>
+     * sheetId, sheetData
+     * @param sheetIds
      * @param elementSize
      * @return
      */
-    public static List<Sheet> getInsertSheet(List<Integer> sheetKeys, int elementSize) {
+    public static List<Sheet> createSheets(ActionType actionType, List<Integer> sheetIds, int elementSize) {
         List<Sheet> sheets = new ArrayList<>();
 
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         TransformerFactory tf = TransformerFactory.newInstance();
 
-        int page = 1;
-
         try {
-            for (Integer sheetKey : sheetKeys) {
-                List<Element> elements = new ArrayList<>();
+            int page = 1;
+            for (Integer sheetId : sheetIds) {
+                UUID sheetUUID = createUUID(SHEET_UUID_FORMAT, sheetId);
 
-                Document doc = dbf.newDocumentBuilder().newDocument();
-                org.w3c.dom.Element sheet = new SheetTag(doc, String.format(SHEET_KEY_FORMAT, sheetKey), page++).getElement();
+                if (actionType != ActionType.DELETE) {
+                    Document doc = dbf.newDocumentBuilder().newDocument();
+                    org.w3c.dom.Element sheet = new SheetTag(doc, sheetUUID, page).getElement();
 
-                for (int i=0; i<elementSize; i++) {
-                    sheet.appendChild(createTag(doc, TAG_NAME));
+                    for (int i=0; i<elementSize; i++) {
+                        sheet.appendChild(createTag(doc, TAG_NAME, createUUID(DESIGN_UUID_FORMAT, i)));
+                    }
+
+                    doc.appendChild(sheet);
+                    sheets.add(Sheet.save(sheetUUID, toXmlString(doc, tf, true)));
+                } else {
+                    sheets.add(Sheet.delete(sheetUUID));
                 }
 
-                doc.appendChild(sheet);
-
-                elements.add(new Element(String.format(ELEMENT_ID_FORMAT, 1), toXmlString(doc, tf, true)));
-                sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey), elements));
+                page++;
             }
         } catch (ParserConfigurationException | TransformerException e) {
-            throw new SimulationException("XML processing error", e);
+            throw new SimulationException("sheet XML processing error", e);
         }
 
         return sheets;
     }
 
     /**
-     * 시트 삭제 테스트 데이터 생성<br/>
-     * elements: null
-     * @param sheetKeys
-     * @return
-     */
-    public static List<Sheet> getDeleteSheets(List<Integer> sheetKeys) {
-        List<Sheet> sheets = new ArrayList<>();
-        for (Integer sheetKey : sheetKeys) {
-            sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey)));
-        }
-        return sheets;
-    }
-
-    /**
-     * 요소 추가/수정 테스트 데이터 생성<br/>
-     * element data: 요소부터 시작
-     * @param sheetKey
+     * 요소 추가/수정/삭제 테스트 데이터 생성<br/>
+     * sheetId, elements
+     * @param actionType
+     * @param sheetId
      * @param elementIds
      * @return
      */
-    public static List<Sheet> getSaveElement(int sheetKey, List<Integer> elementIds) {
-        List<Sheet> sheets = new ArrayList<>();
-
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        TransformerFactory tf = TransformerFactory.newInstance();
-
-        try {
-            List<Element> elements = new ArrayList<>();
-
-            for (Integer elementId : elementIds) {
-                Document doc = dbf.newDocumentBuilder().newDocument();
-                doc.appendChild(createTag(doc, TAG_NAME));
-
-                elements.add(new Element(String.format(ELEMENT_ID_FORMAT, elementId), toXmlString(doc, tf, false)));
-            }
-
-            sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey), elements));
-        } catch (ParserConfigurationException | TransformerException e) {
-            throw new SimulationException("XML processing error", e);
-        }
-
-        return sheets;
-    }
-
-    /**
-     * 요소 삭제 테스트 데이터 생성<br/>
-     * element data: null
-     * @param sheetKey
-     * @param elementIds
-     * @return
-     */
-    public static List<Sheet> getDeleteElement(int sheetKey, List<Integer> elementIds) {
+    public static List<Sheet> createElements(ActionType actionType, int sheetId, List<Integer> elementIds) {
         List<Sheet> sheets = new ArrayList<>();
         List<Element> elements = new ArrayList<>();
 
-        for (Integer elementId : elementIds) {
-            elements.add(new Element(String.format(ELEMENT_ID_FORMAT, elementId)));
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        TransformerFactory tf = TransformerFactory.newInstance();
+
+        try {
+            for (Integer elementId : elementIds) {
+                UUID elementUUID = createUUID(ELEMENT_UUID_FORMAT, elementId);
+
+                if (actionType != ActionType.DELETE) {
+                    Document doc = dbf.newDocumentBuilder().newDocument();
+                    doc.appendChild(createTag(doc, TAG_NAME, elementUUID));
+                    elements.add(new Element(elementUUID, toXmlString(doc, tf, false)));
+                } else {
+                    elements.add(new Element(elementUUID));
+                }
+            }
+
+            sheets.add(Sheet.save(createUUID(SHEET_UUID_FORMAT, sheetId), elements));
+        } catch (ParserConfigurationException | TransformerException e) {
+            throw new SimulationException("element XML processing error", e);
         }
 
-        sheets.add(new Sheet(String.format(SHEET_KEY_FORMAT, sheetKey), elements));
         return sheets;
     }
 
-    public static org.w3c.dom.Element createTag(Document doc, String tagName) {
-        SingleTag tag = new SingleTag(doc, tagName);
+    /**
+     * 요소 테스트 데이터 생성
+     * @param doc
+     * @param tagName
+     * @param elementId
+     * @return
+     */
+    public static org.w3c.dom.Element createTag(Document doc, String tagName, UUID elementId) {
+        SingleTag tag = new SingleTag(doc, tagName, elementId);
 
         if ("SVG".equals(tagName)) {
-            SvgTag svg = new SvgTag(doc);
+            SvgTag svg = new SvgTag(doc, elementId);
             svg.addFillColorMap(doc);
             svg.addShadow(doc);
             svg.addSvgLayer(doc);
             tag = svg;
         }
         if ("TEXT".equals(tagName)) {
-            TextTag text = new TextTag(doc);
+            TextTag text = new TextTag(doc, elementId);
             text.addTextData(doc);
             text.addRenderPos(doc);
             text.addText(doc);
@@ -156,6 +140,16 @@ public class SheetXmlUtils {
         }
 
         return tag.getElement();
+    }
+
+    /**
+     * UUID 테스트 데이터 생성
+     * @param format
+     * @param id
+     * @return
+     */
+    public static UUID createUUID(String format, int id) {
+        return UUID.fromString(String.format(format, id));
     }
 
     private static String toXmlString(Document doc, TransformerFactory tf, boolean hasDeclaration) throws TransformerException {

@@ -21,16 +21,16 @@ public class DesignMessageController {
 
         log.info("  Sheets:");
         for (Sheet sheet : request.getSheets()) {
-            log.info("  ㄴ sheetKey: {}", sheet.getSheetKey());
+            log.info("  ㄴ sheetId: {}, sheetData: {}", sheet.getSheetId(), sheet.getSheetData());
 
             if (!CollectionUtils.isEmpty(sheet.getElements())) {
                 log.info("    Elements");
 
                 for (Element element : sheet.getElements()) {
-                    if (StringUtils.hasText(element.getData())) {
-                        log.info("    ㄴ id: {}, data: {}", element.getId(), new String(Base64.decodeBase64(element.getData())));
+                    if (StringUtils.hasText(element.getElementData())) {
+                        log.info("    ㄴ id: {}, data: {}", element.getElementId(), new String(Base64.decodeBase64(element.getElementData())));
                     } else {
-                        log.info("    ㄴ id: {}", element.getId());
+                        log.info("    ㄴ id: {}", element.getElementId());
                     }
                 }
             }

@@ -2,6 +2,7 @@ package com.example.gatling.infrastructure.simulations;
 
 import com.example.gatling.design.domain.ActionType;
 import com.example.gatling.design.domain.Sheet;
+import com.example.gatling.design.domain.Target;
 import com.example.gatling.design.presentation.DesignRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
@@ -16,12 +17,14 @@ import org.springframework.http.MediaType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
 import static io.gatling.javaapi.http.HttpDsl.ws;
 
 public class SheetInsertSimulation extends Simulation {
+    static final String DESIGN_ID_NAME = "designId";
 
     HttpProtocolBuilder httpProtocol = http
             .baseUrl("http://localhost:8080")
@@ -33,29 +36,30 @@ public class SheetInsertSimulation extends Simulation {
             .wsBaseUrl("ws://localhost:8080");
 
     List<Integer> designIds = Arrays.asList(1, 2, 3);
-    List<Integer> sheetKeys = new ArrayList<>();
+    List<Integer> sheetIds = new ArrayList<>();
 
     {
         for (int i=1; i<=10; i++) {
-            sheetKeys.add(i);
+            sheetIds.add(i);
         }
     }
 
-    int elementSize = 1;
+    int elementSize = 5;
 
     ChainBuilder insert =
             exec(ws("Connect WS").connect("/connect"))
             .pause(1)
-            .foreach(designIds, "designId").on(
-                exec(ws("INSERT SEND").sendText(session -> {
-                    List<Sheet> sheets = SheetXmlUtils.getInsertSheet(sheetKeys, elementSize);
+            .foreach(designIds, DESIGN_ID_NAME).on(
+                exec(ws("Insert Sheets").sendText(session -> {
+                    UUID designId = SheetXmlUtils.createUUID(SheetXmlUtils.DESIGN_UUID_FORMAT, session.getInt(DESIGN_ID_NAME));
+                    List<Sheet> sheets = SheetXmlUtils.createSheets(ActionType.INSERT, sheetIds, elementSize);
 
-                    StompFrame request = SendFrame.builder()
-                            .body(ParserUtils.toJsonString(new DesignRequest(session.getInt("designId"), ActionType.INSERT, sheets)))
+                    StompFrame frame = SendFrame.builder()
+                            .body(ParserUtils.toJsonString(new DesignRequest(designId, Target.SHEET, ActionType.INSERT, sheets)))
                             .contentType(MediaType.APPLICATION_JSON)
                             .build();
 
-                    return request.make();
+                    return frame.createPayload();
                 })).pause(1)
             )
             .pause(1)
