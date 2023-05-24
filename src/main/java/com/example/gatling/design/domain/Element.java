@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 @ToString
 @NoArgsConstructor
-@EqualsAndHashCode(of = {"id"})
+@EqualsAndHashCode(of = {"elementId"})
 public class Element {
     private UUID elementId;
     private String elementData;
