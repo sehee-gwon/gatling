@@ -71,6 +71,8 @@ public class DesignMetaData {
     }
 
     @Getter
+    @ToString
+    @NoArgsConstructor
     public static class DesignPage {
         private long idx;
         private String sheetKey = "";
@@ -109,6 +111,9 @@ public class DesignMetaData {
         }
     }
 
+    @Getter
+    @ToString
+    @NoArgsConstructor
     public static class DesignPageResponse {
         private long idx;
         private String sheetKey;
