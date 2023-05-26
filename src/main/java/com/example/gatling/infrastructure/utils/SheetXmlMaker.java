@@ -30,7 +30,7 @@ import java.util.UUID;
 public class SheetXmlMaker {
     public static final String TAG_NAME = "SVG";
 
-    public static final String DESIGN_UUID_FORMAT = "aaaaaaaa-0000-0000-0000-%012d";
+    public static final String DESIGN_ID_FORMAT = "abcdefg";
     public static final String SHEET_UUID_FORMAT = "bbbbbbbb-1111-1111-1111-%012d";
     public static final String ELEMENT_UUID_FORMAT = "cccccccc-2222-2222-2222-%012d";
 
@@ -57,7 +57,7 @@ public class SheetXmlMaker {
                     org.w3c.dom.Element sheet = new SheetTag(doc, sheetUUID, page).getElement();
 
                     for (int i=0; i<elementSize; i++) {
-                        sheet.appendChild(createTag(doc, TAG_NAME, createUUID(DESIGN_UUID_FORMAT, i)));
+                        sheet.appendChild(createTag(doc, TAG_NAME, createUUID(ELEMENT_UUID_FORMAT, i)));
                     }
 
                     doc.appendChild(sheet);

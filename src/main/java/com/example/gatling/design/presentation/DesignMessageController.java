@@ -22,7 +22,7 @@ public class DesignMessageController {
 
         log.info("  Sheets:");
         for (Sheet sheet : request.getSheets()) {
-            log.info("  ㄴ sheetId: {}, sheetData: {}", sheet.getSheetId(), sheet.getSheetData());
+            log.info("  ㄴ sheetId: {}, sheetData: {}", sheet.getSheetId(), new String(Base64.decodeBase64(sheet.getSheetData())));
 
             if (!CollectionUtils.isEmpty(sheet.getElements())) {
                 log.info("    Elements");

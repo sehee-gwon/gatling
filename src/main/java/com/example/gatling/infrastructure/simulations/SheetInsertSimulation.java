@@ -20,7 +20,6 @@ import org.springframework.http.MediaType;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 import static io.gatling.javaapi.core.CoreDsl.*;
 import static io.gatling.javaapi.http.HttpDsl.http;
@@ -54,7 +53,7 @@ public class SheetInsertSimulation extends Simulation {
             .pause(1)
             .foreach(designIds, DESIGN_ID_NAME).on(
                 exec(ws("Insert Sheets").sendText(session -> {
-                    UUID designId = SheetXmlMaker.createUUID(SheetXmlMaker.DESIGN_UUID_FORMAT, session.getInt(DESIGN_ID_NAME));
+                    String designIdx = SheetXmlMaker.DESIGN_ID_FORMAT + session.getInt(DESIGN_ID_NAME);
                     List<Sheet> sheets = SheetXmlMaker.createSheets(ActionType.INSERT, sheetIds, elementSize);
 
                     long teamIdx = RandomUtils.randNumber(100000, 200000);
@@ -63,7 +62,7 @@ public class SheetInsertSimulation extends Simulation {
                             DesignMetaDataMaker.createDesignMetaData(session.getInt(DESIGN_ID_NAME), teamIdx, accountId, "User" + accountId, sheets);
 
                     DesignRequest request = DesignRequest.builder()
-                            .designIdx(designId)
+                            .designIdx(designIdx)
                             .target(Target.SHEET)
                             .actionType(ActionType.INSERT)
                             .sheets(sheets)

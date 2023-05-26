@@ -32,11 +32,11 @@ public class ElementActionSimulation extends Simulation {
     static final String SHEET_ID_NAME = "sheetId";
 
     public String createPayload(Session session, ActionType actionType, List<Integer> elementIds) {
-        UUID designId = SheetXmlMaker.createUUID(SheetXmlMaker.DESIGN_UUID_FORMAT, session.getInt(DESIGN_ID_NAME));
+        String designIdx = SheetXmlMaker.DESIGN_ID_FORMAT + session.getInt(DESIGN_ID_NAME);
         List<Sheet> sheets = SheetXmlMaker.createElements(actionType, session.getInt(SHEET_ID_NAME), elementIds);
 
         DesignRequest request = DesignRequest.builder()
-                .designIdx(designId)
+                .designIdx(designIdx)
                 .target(Target.ELEMENT)
                 .actionType(actionType)
                 .sheets(sheets)

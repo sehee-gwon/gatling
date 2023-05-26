@@ -10,20 +10,19 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.UUID;
 
 @Getter
 @ToString
 @NoArgsConstructor
 public class DesignRequest {
-    private UUID designIdx;
+    private String designIdx;
     private ActionType actionType;
     private Target target;
     private List<Sheet> sheets;
     private DesignMetaData designMetaData;
 
     @Builder
-    public DesignRequest(UUID designIdx, Target target,
+    public DesignRequest(String designIdx, Target target,
                          ActionType actionType, List<Sheet> sheets,
                          DesignMetaData designMetaData) {
         this.designIdx = designIdx;
