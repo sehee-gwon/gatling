@@ -1,13 +1,13 @@
 package com.example.gatling.infrastructure.simulations;
 
-import com.example.gatling.design.domain.ActionType;
 import com.example.gatling.design.domain.Sheet;
-import com.example.gatling.design.domain.Target;
+import com.example.gatling.design.domain.enumeration.ActionType;
+import com.example.gatling.design.domain.enumeration.Target;
 import com.example.gatling.design.presentation.DesignRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
 import com.example.gatling.infrastructure.utils.ParserUtils;
-import com.example.gatling.infrastructure.utils.SheetXmlUtils;
+import com.example.gatling.infrastructure.utils.SheetXmlMaker;
 import io.gatling.javaapi.core.ChainBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Session;
@@ -32,11 +32,18 @@ public class ElementActionSimulation extends Simulation {
     static final String SHEET_ID_NAME = "sheetId";
 
     public String createPayload(Session session, ActionType actionType, List<Integer> elementIds) {
-        UUID designId = SheetXmlUtils.createUUID(SheetXmlUtils.DESIGN_UUID_FORMAT, session.getInt(DESIGN_ID_NAME));
-        List<Sheet> sheets = SheetXmlUtils.createElements(actionType, session.getInt(SHEET_ID_NAME), elementIds);
+        UUID designId = SheetXmlMaker.createUUID(SheetXmlMaker.DESIGN_UUID_FORMAT, session.getInt(DESIGN_ID_NAME));
+        List<Sheet> sheets = SheetXmlMaker.createElements(actionType, session.getInt(SHEET_ID_NAME), elementIds);
+
+        DesignRequest request = DesignRequest.builder()
+                .designIdx(designId)
+                .target(Target.ELEMENT)
+                .actionType(actionType)
+                .sheets(sheets)
+                .build();
 
         StompFrame frame = SendFrame.builder()
-                .body(ParserUtils.toJsonString(new DesignRequest(designId, Target.ELEMENT, actionType, sheets)))
+                .body(ParserUtils.toJsonString(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .build();
 

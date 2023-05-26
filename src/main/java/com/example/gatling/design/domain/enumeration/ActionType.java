@@ -1,4 +1,4 @@
-package com.example.gatling.design.domain;
+package com.example.gatling.design.domain.enumeration;
 
 public enum ActionType {
     INSERT,

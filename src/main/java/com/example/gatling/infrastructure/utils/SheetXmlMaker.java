@@ -1,6 +1,6 @@
 package com.example.gatling.infrastructure.utils;
 
-import com.example.gatling.design.domain.ActionType;
+import com.example.gatling.design.domain.enumeration.ActionType;
 import com.example.gatling.design.domain.Element;
 import com.example.gatling.design.domain.Sheet;
 import com.example.gatling.infrastructure.exception.SimulationException;
@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class SheetXmlUtils {
+public class SheetXmlMaker {
     public static final String TAG_NAME = "SVG";
 
     public static final String DESIGN_UUID_FORMAT = "aaaaaaaa-0000-0000-0000-%012d";

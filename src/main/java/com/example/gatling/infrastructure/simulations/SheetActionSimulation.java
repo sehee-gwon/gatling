@@ -1,13 +1,16 @@
 package com.example.gatling.infrastructure.simulations;
 
-import com.example.gatling.design.domain.ActionType;
+import com.example.gatling.design.domain.DesignMetaData;
+import com.example.gatling.design.domain.enumeration.ActionType;
 import com.example.gatling.design.domain.Sheet;
-import com.example.gatling.design.domain.Target;
+import com.example.gatling.design.domain.enumeration.Target;
 import com.example.gatling.design.presentation.DesignRequest;
 import com.example.gatling.infrastructure.stomp.SendFrame;
 import com.example.gatling.infrastructure.stomp.StompFrame;
+import com.example.gatling.infrastructure.utils.DesignMetaDataMaker;
 import com.example.gatling.infrastructure.utils.ParserUtils;
-import com.example.gatling.infrastructure.utils.SheetXmlUtils;
+import com.example.gatling.infrastructure.utils.RandomUtils;
+import com.example.gatling.infrastructure.utils.SheetXmlMaker;
 import io.gatling.javaapi.core.ChainBuilder;
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Session;
@@ -31,11 +34,24 @@ public class SheetActionSimulation extends Simulation {
     static final String DESIGN_ID_NAME = "designId";
 
     public String createPayload(Session session, ActionType actionType, List<Integer> sheetIds, int elementSize) {
-        UUID designId = SheetXmlUtils.createUUID(SheetXmlUtils.DESIGN_UUID_FORMAT, session.getInt(DESIGN_ID_NAME));
-        List<Sheet> sheets = SheetXmlUtils.createSheets(actionType, sheetIds, elementSize);
+        UUID designId = SheetXmlMaker.createUUID(SheetXmlMaker.DESIGN_UUID_FORMAT, session.getInt(DESIGN_ID_NAME));
+        List<Sheet> sheets = SheetXmlMaker.createSheets(actionType, sheetIds, elementSize);
+
+        long teamIdx = RandomUtils.randNumber(100000, 200000);
+        long accountId = RandomUtils.randNumber(100000, 200000);
+        DesignMetaData designMetaData =
+                DesignMetaDataMaker.createDesignMetaData(session.getInt(DESIGN_ID_NAME), teamIdx, accountId, "User" + accountId, sheets);
+
+        DesignRequest request = DesignRequest.builder()
+                .designIdx(designId)
+                .target(Target.SHEET)
+                .actionType(actionType)
+                .sheets(sheets)
+                .designMetaData(designMetaData)
+                .build();
 
         StompFrame frame = SendFrame.builder()
-                .body(ParserUtils.toJsonString(new DesignRequest(designId, Target.SHEET, actionType, sheets)))
+                .body(ParserUtils.toJsonString(request))
                 .contentType(MediaType.APPLICATION_JSON)
                 .build();
 

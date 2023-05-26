@@ -16,8 +16,9 @@ import org.springframework.util.StringUtils;
 public class DesignMessageController {
     @MessageMapping("/designId")
     public void action(DesignRequest request) {
-        log.info("---------------------------------------------------------------------------");
-        log.info("designIdx: {}, actionType: {}", request.getDesignIdx(), request.getActionType());
+        log.info("----------------------------------------------------------------------------------------------------------------");
+        log.info("designIdx: {}, target: {}, actionType: {}", request.getDesignIdx(), request.getTarget(), request.getActionType());
+        log.info("designMetaData: {}", request.getDesignMetaData());
 
         log.info("  Sheets:");
         for (Sheet sheet : request.getSheets()) {
@@ -28,9 +29,9 @@ public class DesignMessageController {
 
                 for (Element element : sheet.getElements()) {
                     if (StringUtils.hasText(element.getElementData())) {
-                        log.info("    ㄴ id: {}, data: {}", element.getElementId(), new String(Base64.decodeBase64(element.getElementData())));
+                        log.info("    ㄴ elementId: {}, elementData: {}", element.getElementId(), new String(Base64.decodeBase64(element.getElementData())));
                     } else {
-                        log.info("    ㄴ id: {}", element.getElementId());
+                        log.info("    ㄴ elementId: {}", element.getElementId());
                     }
                 }
             }
